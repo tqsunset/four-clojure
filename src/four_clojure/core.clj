@@ -41,3 +41,26 @@
 ;;Read a binary number
 (defn read-binary [string]
   (Integer/parseInt string 2))
+
+;;Indexing Sequences
+(defn Ind-seq [coll]
+  (keep-indexed (fn [x1 x2] [x2 x1]) coll))
+
+;;Infix Calculator
+(defn infix [& exp]
+  (let [numb (filter number? exp)
+        op (filter (complement number?) exp)]
+    (loop [acc (first numb)
+           number (rest numb)
+           operator op]
+      (if (empty? number)
+        acc
+        (recur ((first operator) acc (first number)) (rest number) (rest operator))))))
+
+(defn infix* [& args]
+  (loop [[x op y & exp] args]
+    (let [result (op x y)]
+      (if (empty? exp)
+       result
+       (recur (cons result exp))))))
+
