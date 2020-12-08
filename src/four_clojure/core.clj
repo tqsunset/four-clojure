@@ -64,3 +64,25 @@
        result
        (recur (cons result exp))))))
 
+;;Re-implement Map
+(defn map* [f coll]
+   (if (empty? coll)
+     '()
+     (lazy-seq (cons (f (first coll)) (map* f (rest coll))))))
+
+;;sum of square digits
+(defn sum-sq-dg [coll]
+  (count (filter (fn [x]
+             (< x (->> (seq (str x))
+                       (map #(- (int %) (int \0)))
+                       (map #(* % %))
+                       (apply +)
+                       )))
+           coll)))
+
+;;Recognize Playing Cards
+(defn read-card [[suit rank]]
+  (let [suit-map (zipmap [\S \H \D \C] [:spade :heart :diamond :club])
+        rank-map (zipmap (concat (seq "23456789") '(\T \J \Q \K \A)) (range 13))]
+    {:suit (get suit-map suit) :rank (get rank-map rank)}
+    ))
