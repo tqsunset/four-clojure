@@ -86,3 +86,37 @@
         rank-map (zipmap (concat (seq "23456789") '(\T \J \Q \K \A)) (range 13))]
     {:suit (get suit-map suit) :rank (get rank-map rank)}
     ))
+
+;;Least Common Multiple
+(defn LCM
+  ([a b]
+   (loop [acc [a b]
+          ori-a a
+          ori-b b]
+     (if (apply = acc)
+      (first acc)
+      (if (apply > acc)
+        (recur [(first acc) (+ (second acc) ori-b)] ori-a ori-b)
+        (recur [(+ (first acc) ori-a) (second acc)] ori-a ori-b)))))
+  ([a b & c]
+   (apply LCM (cons (LCM a b) c))))
+
+;;Least Common Multiple (using A * B = (LCM of A, B) * (GCD of A, B))
+(defn LCM* [& coll]
+  (reduce (fn [x y]
+            (/ (* x y)
+               ((fn [a b]
+                  (if (zero? b)
+                    a
+                    (recur b (mod a b)))) x y)))
+          (seq coll)))
+
+;;Pascal;s Trapezoid
+(defn pascal-helper [coll]
+  (let [body (map (partial apply +') (partition 2 1 coll))
+        head (first coll)
+        tail (last coll)]
+    (concat [head] body [tail])))
+
+(defn pascal [coll]
+  (iterate pascal-helper coll))
